@@ -2,13 +2,14 @@
 
 import { Button } from 'primereact/button';
 import { useEffect, useState } from 'react';
-import { selectedsGet } from '@/actions/selecteds-get';
+import { ISelected, selectedsGet } from '@/actions/selecteds-get';
 
 export default function Board() {
-  const [selecteds, setSelecteds] = useState<number[]>([]);
+  const [selecteds, setSelecteds] = useState<ISelected[]>([]);
 
   const select = (number: number) => {
-    if (!selecteds.includes(number)) setSelecteds([...selecteds, number]);
+    if (!selecteds.some(s => s.number === number))
+      setSelecteds([...selecteds, { number, name: '', phone: '' }]);
   };
 
   useEffect(() => {
@@ -21,11 +22,11 @@ export default function Board() {
         <div className="">
           <Button
             id={i.toString()}
-            className={`btn ${selecteds.includes(i) ? 'btn-secondary' : 'btn-primary'} w-4rem h-4rem pulse`}
+            className={`btn ${selecteds.some(s => s.number === i) ? 'btn-secondary' : 'btn-primary'} w-4rem h-4rem pulse`}
             label={i.toString()}
             type="button"
             onClick={() => select(i)}
-            disabled={selecteds.includes(i)}
+            disabled={selecteds.some(s => s.number === i)}
           />
         </div>
       ))}
