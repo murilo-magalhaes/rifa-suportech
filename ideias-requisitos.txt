@@ -1,0 +1,26 @@
+> Permitir definição de mais de um prêmio
+> De acordo com a qnt de prêmios, definir qnt de sorteio
+> Permitir definição de qnt de opções na rifa
+> Criar lógica para salvar várias rifas simultaneamente
+
+> Extras (FAZER DEPOIS):
+ * Permitir troca de aparência
+
+
+> Classes:
+  * Rifa 
+  * Pessoa
+  * Premio
+  * Opcao
+    - id 
+    - numero
+    - title
+  * Jogo 
+    - id
+    - rifa_id
+    - numero
+    
+  
+
+
+* Caso identifique-se a necessidade de banco de dados, usar mongodb compass
