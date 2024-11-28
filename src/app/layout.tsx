@@ -5,6 +5,8 @@ import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import 'primereact/resources/primereact.css';
 import './globals.css';
+import ToastContextProvider from '@/context/AppToastContext';
+import PrimeReactProvider from '@/providers/primereact-provider';
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
@@ -29,7 +31,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <PrimeReactProvider>
+          <ToastContextProvider>{children}</ToastContextProvider>
+        </PrimeReactProvider>
       </body>
     </html>
   );
