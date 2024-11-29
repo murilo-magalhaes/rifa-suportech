@@ -16,6 +16,8 @@ export default function Board() {
   const [chosenOptions, setChosenOptions] = useState<ISelected[]>([]);
   const [requestedOptions, setRequestedOptions] = useState<number[]>([]);
 
+  const [isMobile, setIsMobile] = useState(false);
+
   const [dialogRequestVisible, setDialogRequestVisible] =
     useState<boolean>(false);
 
@@ -31,6 +33,22 @@ export default function Board() {
     const number = sortNumber(1, 100);
     toast('success', 'Sucesso', `O número sorteado foi: ${number}`);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      // Define o tamanho limite para mobile
+    };
+
+    // Verifica o tamanho da tela ao carregar
+    handleResize();
+
+    // Adiciona o listener para alterações de tamanho
+    window.addEventListener('resize', handleResize);
+
+    // Remove o listener ao desmontar
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     loadChosenOptions();
@@ -58,32 +76,44 @@ export default function Board() {
   };
 
   return (
-    <div className="flex gap-4">
-      <div>
-        {isLoad && <ProgressBar mode="indeterminate" />}
-        <div className="board">
+    <div className="grid w-full h-full">
+      {/* Coluna esquerda */}
+      <div className="column-fixed md:h-full col-12 md:col-6 flex flex-column">
+        <div className="poster md:h-full flex justify-content-center align-items-center">
+          <img src="/assets/poster-1.jpeg" alt="Poster" />
+        </div>
+      </div>
+      {!isMobile && <div className="col-6"></div>}
+      {/* Coluna direita */}
+      <div className="col-12 md:col-6 flex flex-column md:px-4 pt-8">
+        <h2 className="title mb-4">Acompanhe o andamento da rifa</h2>
+
+        <ProgressBar value={chosenOptions.length} />
+
+        {/* Jogo */}
+        <div className="game w-full align-items-center justify-content-center">
           {Array.from({ length: 100 })
             .map((_, i) => i + 1)
             .map(i => (
-              <div className="">
-                <Button
-                  key={i}
-                  id={i.toString()}
-                  className={`btn ${chosenOptions.some(s => s.number === i) ? 'btn-secondary' : 'btn-primary'} w-4rem h-4rem pulse`}
-                  style={{
-                    backgroundColor: requestedOptions.includes(i)
-                      ? '#00BFFF'
+              <Button
+                key={i}
+                id={i.toString()}
+                className={`btn btn-primary font-bold cell text-center mb-1`}
+                style={{
+                  backgroundColor: requestedOptions.includes(i)
+                    ? '#00BFFF'
+                    : chosenOptions.some(o => o.number === i)
+                      ? '#708090'
                       : '#0B5ED7',
-                    borderColor: requestedOptions.includes(i)
-                      ? '#00BFFF'
-                      : '#0B5ED7',
-                  }}
-                  label={i.toString()}
-                  type="button"
-                  onClick={() => chooseOption(i)}
-                  disabled={chosenOptions.some(s => s.number === i)}
-                />
-              </div>
+                  borderColor: requestedOptions.includes(i)
+                    ? '#00BFFF'
+                    : '#0B5ED7',
+                }}
+                label={i.toString()}
+                type="button"
+                onClick={() => chooseOption(i)}
+                disabled={chosenOptions.some(s => s.number === i)}
+              />
             ))}
           <DialogRequest
             isOpen={dialogRequestVisible}
@@ -92,30 +122,46 @@ export default function Board() {
             onOptionsChange={setRequestedOptions}
           />
         </div>
+        {/* Legenda */}
+        <div className="flex justify-content-end">
+          <span
+            className="badge fs-6 m-2"
+            style={{ backgroundColor: '#708090' }}
+          >
+            Indisponível
+          </span>
+          <span
+            className="badge fs-6 m-2"
+            style={{ backgroundColor: '#0B5ED7' }}
+          >
+            Disponível
+          </span>
+        </div>
+        {/* Botão de escolha */}
+        <p className="mt-4">
+          Selecione as opções que deseja e depois clique no botão.
+        </p>
         <Button
           label="Escolher opções"
           type="button"
-          className="w-full my-2 btn btn-success"
+          className="w-full h-5rem mb-4 btn btn-success"
           onClick={() => setDialogRequestVisible(true)}
           disabled={requestedOptions.length === 0}
         />
-        <Button
-          className="w-full my-2 btn btn-success"
-          label="Sortear número"
-          icon="pi pi-dice"
-          loading={isLoad}
-          onClick={handleSortNumber}
-        />
-      </div>
-      <div>
-        <h2 className="text-center">Opções já escolhidas</h2>
-        <ul style={{ listStyle: 'none' }}>
-          {chosenOptions.map(o => (
-            <li className="text-xl">
-              {o.number}: {o.name}
-            </li>
-          ))}
-        </ul>
+        {/* Lista de escolhidas */}
+        <div>
+          <h2 className="text-center">Opções já escolhidas</h2>
+          <ul style={{ listStyle: 'none' }}>
+            {chosenOptions.map(o => (
+              <li key={o.number} className="text-xl mb-2">
+                <span className="btn btn-primary w-2rem h-2rem p-1">
+                  {o.number}
+                </span>{' '}
+                {o.name}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

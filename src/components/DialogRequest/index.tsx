@@ -121,6 +121,7 @@ export default function DialogRequest({
           <h4 className="text-center">Opções selecionadas</h4>
           {options.map(o => (
             <span
+              key={o}
               onClick={() => {
                 onOptionsChange(options.filter(opt => opt !== o));
               }}
