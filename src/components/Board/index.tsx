@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
 import React, { useEffect, useState } from 'react';
 import DialogRequest from '../DialogRequest';
-import { ISelected, selectedsGet } from '@/actions/selecteds-get';
+import choosenOptionsGet, { ISelected } from '@/actions/choosen-options-get';
 import useToastContext from '@/hooks/toast';
 import sortNumber from '@/utils/number/sortNumber';
 import { Divider } from 'primereact/divider';
@@ -58,17 +58,19 @@ export default function Board() {
 
   const loadChosenOptions = async () => {
     setIsLoad(true);
-    await selectedsGet()
-      .then(res => {
+    await choosenOptionsGet()
+      .then((res: any) => {
         if (res) {
           if (res.data) {
             console.log(res.data);
 
-            setChosenOptions(res.data.sort((a, b) => a.number - b.number));
+            setChosenOptions(
+              res.data.sort((a: any, b: any) => a.number - b.number),
+            );
           }
         }
       })
-      .catch(err => {
+      .catch((err: any) => {
         toast('error', 'Erro', err);
       })
       .finally(() => setIsLoad(false));

@@ -8,9 +8,9 @@ import { InputMask } from 'primereact/inputmask';
 import { InputText } from 'primereact/inputtext';
 import { ProgressBar } from 'primereact/progressbar';
 import { useRef, useState } from 'react';
-import { selectedAdd } from '@/actions/selected-add';
 import useToastContext from '@/hooks/toast';
 import stringNotNull from '@/utils/string/stringNotNull';
+import { chooseOptionAdd } from '@/actions/choose-option-add';
 
 interface IProps {
   onRequestClose: () => void;
@@ -87,7 +87,7 @@ export default function DialogRequest({
       // for (const option of options) {
       //   console.log(option);
 
-      //   const res = await selectedAdd({
+      //   const res = await chooseOptionAdd({
       //     name: optionsRequest.name,
       //     number: option,
       //     phone: optionsRequest.phone || '',
