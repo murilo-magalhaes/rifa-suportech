@@ -5,6 +5,8 @@ import 'primeicons/primeicons.css';
 import 'primereact/resources/primereact.css';
 import './globals.css';
 import ToastContextProvider from '@/context/AppToastContext';
+import { PrimeReactProvider } from 'primereact/api';
+import 'primereact/resources/themes/lara-light-cyan/theme.css';
 
 export const metadata: Metadata = {
   title: 'Rifa SuporTech',
@@ -18,8 +20,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
+      <head>
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          rel="stylesheet"
+        />
+      </head>
       <body>
-        <ToastContextProvider>{children}</ToastContextProvider>
+        <PrimeReactProvider>
+          <ToastContextProvider>{children}</ToastContextProvider>
+        </PrimeReactProvider>
       </body>
     </html>
   );

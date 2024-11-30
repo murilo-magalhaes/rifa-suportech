@@ -30,13 +30,25 @@ body {
 }
 
 .cell {
-  min-width: 50px;
-  min-height: 50px;
+  min-width: 60px;
+  min-height: 60px;
 }
 
 .column-fixed {
   position: fixed;
   background-color: #00a7eb;
+}
+
+.choosen {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  padding: 1rem;
+}
+
+.doe {
+  display: grid;
+  grid-template-columns: auto;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
@@ -52,5 +64,18 @@ body {
 
   .game {
     grid-template-columns: repeat(7, auto);
+  }
+
+  .cell {
+    min-width: 50px;
+    min-height: 50px;
+  }
+
+  .choosen {
+    grid-template-columns: auto auto;
+  }
+
+  .doe img {
+    width: 90vw;
   }
 }
