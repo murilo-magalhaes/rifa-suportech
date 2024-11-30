@@ -8,6 +8,7 @@ import { ISelected, selectedsGet } from '@/actions/selecteds-get';
 import useToastContext from '@/hooks/toast';
 import sortNumber from '@/utils/number/sortNumber';
 import { Divider } from 'primereact/divider';
+import stringNotNull from '@/utils/string/stringNotNull';
 
 export default function Board() {
   const toast = useToastContext();
@@ -61,6 +62,8 @@ export default function Board() {
       .then(res => {
         if (res) {
           if (res.data) {
+            console.log(res.data);
+
             setChosenOptions(res.data.sort((a, b) => a.number - b.number));
           }
         }
@@ -193,7 +196,16 @@ export default function Board() {
                 <span className="btn btn-primary w-2rem h-2rem p-1">
                   {o.number}
                 </span>{' '}
-                {o.name}
+                {stringNotNull(o.instagram) && (
+                  <a
+                    target="_blank"
+                    href={`https://instagram.com/${o.instagram}`}
+                    rel="noreferrer"
+                  >
+                    {o.name}
+                  </a>
+                )}
+                {!stringNotNull(o.instagram) && <>{o.name}</>}
               </li>
             ))}
           </ul>
