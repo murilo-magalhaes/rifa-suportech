@@ -134,7 +134,7 @@ const AppConfig = (props: AppConfigProps) => {
 
   const changeRipple = (e: InputSwitchChangeEvent) => {
     if (typeof e.value === 'boolean') {
-      setRipple(e.value);
+      if (setRipple) setRipple(e.value);
       const _layoutConfig = {
         ...layoutConfig,
         ripple: e.value,

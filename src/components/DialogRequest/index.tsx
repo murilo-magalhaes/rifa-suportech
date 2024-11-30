@@ -10,6 +10,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { useRef, useState } from 'react';
 import { selectedAdd } from '@/actions/selected-add';
 import useToastContext from '@/hooks/toast';
+import stringNotNull from '@/utils/string/stringNotNull';
 
 interface IProps {
   onRequestClose: () => void;
@@ -52,13 +53,18 @@ export default function DialogRequest({
 
   // functions
   const handleSubmit = async () => {
-    console.log('aqui', optionsRequest);
-
     if (optionsRequest.name === '') {
       toast('warn', 'Alerta', 'Informe o nome!');
       return;
     }
 
+    if (
+      stringNotNull(optionsRequest.phone) &&
+      optionsRequest.phone?.length !== 15
+    ) {
+      toast('warn', 'Alerta', 'Número de telfone inválido.');
+      return;
+    }
     if (
       optionsRequest.instagram === '' &&
       (optionsRequest.phone === undefined || optionsRequest.phone === '')
@@ -78,27 +84,46 @@ export default function DialogRequest({
 
     setIsLoad(true);
     try {
-      for (const option of options) {
-        console.log(option);
+      // for (const option of options) {
+      //   console.log(option);
 
-        const res = await selectedAdd({
-          name: optionsRequest.name,
-          number: option,
-          phone: optionsRequest.phone || '',
-          instagram: optionsRequest.instagram,
-          date_buy: today,
-        });
-        if (!res.ok) {
-          toast('error', 'Erro', res.error);
-          return;
-        }
-      }
+      //   const res = await selectedAdd({
+      //     name: optionsRequest.name,
+      //     number: option,
+      //     phone: optionsRequest.phone || '',
+      //     instagram: optionsRequest.instagram,
+      //     date_buy: today,
+      //   });
+      //   if (!res.ok) {
+      //     toast('error', 'Erro', res.error);
+      //     return;
+      //   }
+      // }
 
-      onOptionsChange([]);
-      onRequestClose();
+      const message = `Olá, SuporTech! Gostaria de adquirir o(s) números [${options.join(',')}] da rifa.
+      \nMe chamo ${optionsRequest.name} e meus contatos são:
+      \nTelefone: ${stringNotNull(optionsRequest.phone) ? optionsRequest.phone : 'não informado.'}
+      \nInstagram: ${stringNotNull(optionsRequest.instagram) ? optionsRequest.instagram : 'não informado'}`;
+
+      const encodedMessage = encodeURIComponent(message);
+
+      const whatsappLink = `https://wa.me/5562991286450?text=${encodedMessage}`;
+      const a = document.createElement('a');
+      a.href = whatsappLink;
+      a.target = '_blank';
+      a.click();
+
+      toast('success', 'Sucesso', 'Encaminhamos seu pedido para confirmação.');
+
+      handleClose();
     } finally {
       setIsLoad(false);
     }
+  };
+
+  const handleClose = () => {
+    onOptionsChange([]);
+    onRequestClose();
   };
 
   // templates
@@ -169,12 +194,26 @@ export default function DialogRequest({
             }
           />
         </div>
+
+        <p className="field col-12 font-bold ml-2">
+          Total: R${options.length * 10}
+        </p>
         {isLoad && <ProgressBar mode="indeterminate" />}
-        <div className="field col-12">
+        <div className="field col-12 md:col-6 my-0">
+          <Button
+            label="Voltar"
+            className="btn btn-danger w-full mt-4"
+            type="button"
+            onClick={handleClose}
+            icon="pi pi-times"
+          />
+        </div>
+        <div className="field col-12 md:col-6 my-0">
           <Button
             label="Salvar escolha"
             className="btn btn-success w-full mt-4"
             type="submit"
+            icon="pi pi-check"
           />
         </div>
       </Form>

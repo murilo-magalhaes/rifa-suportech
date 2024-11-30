@@ -99,6 +99,7 @@ export default function Board() {
           Sorteio assim que acabar os números!
         </h2>
 
+        <p>{chosenOptions.length}/100</p>
         <ProgressBar
           value={chosenOptions.length}
           displayValueTemplate={valueTemplate}
