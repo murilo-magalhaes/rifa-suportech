@@ -9,13 +9,15 @@ import useToastContext from '@/hooks/toast';
 import sortNumber from '@/utils/number/sortNumber';
 import { Divider } from 'primereact/divider';
 import stringNotNull from '@/utils/string/stringNotNull';
+import choosenOptions from './data/choosenOptions';
 
 export default function Board() {
   const toast = useToastContext();
 
   const [isLoad, setIsLoad] = useState<boolean>(false);
 
-  const [chosenOptions, setChosenOptions] = useState<ISelected[]>([]);
+  const [chosenOptions, setChosenOptions] =
+    useState<ISelected[]>(choosenOptions);
   const [requestedOptions, setRequestedOptions] = useState<number[]>([]);
 
   const [isMobile, setIsMobile] = useState(false);
@@ -52,9 +54,9 @@ export default function Board() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    loadChosenOptions();
-  }, []);
+  // useEffect(() => {
+  //   loadChosenOptions();
+  // }, []);
 
   const loadChosenOptions = async () => {
     setIsLoad(true);
@@ -193,23 +195,27 @@ export default function Board() {
         </Divider>
         <div>
           <ul style={{ listStyle: 'none' }} className="choosen">
-            {chosenOptions.map(o => (
-              <li key={o.number} className="text-xl mb-2">
-                <span className="btn btn-primary w-2rem h-2rem p-1">
-                  {o.number}
-                </span>{' '}
-                {stringNotNull(o.instagram) && (
-                  <a
-                    target="_blank"
-                    href={`https://instagram.com/${o.instagram}`}
-                    rel="noreferrer"
-                  >
-                    {o.name}
-                  </a>
-                )}
-                {!stringNotNull(o.instagram) && <>{o.name}</>}
-              </li>
-            ))}
+            {chosenOptions.length > 0 &&
+              chosenOptions.map(o => (
+                <li key={o.number} className="text-xl mb-2">
+                  <span className="btn btn-primary w-2rem h-2rem p-1">
+                    {o.number}
+                  </span>{' '}
+                  {stringNotNull(o.instagram) && (
+                    <a
+                      target="_blank"
+                      href={`https://instagram.com/${o.instagram}`}
+                      rel="noreferrer"
+                    >
+                      {o.name}
+                    </a>
+                  )}
+                  {!stringNotNull(o.instagram) && <>{o.name}</>}
+                </li>
+              ))}
+            {chosenOptions.length === 0 && (
+              <p>Nenhuma opção foi escolhida até o momento.</p>
+            )}
           </ul>
         </div>
         {/* Sobre */}
